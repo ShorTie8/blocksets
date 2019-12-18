@@ -9,6 +9,7 @@ cd mods-available
 ```
 wget https://github.com/ShorTie8/blocksets/archive/master.tar.gz
 tar -xvf master.tar.gz
+mv blocksets-master blocksets
 ```
 or
 ```

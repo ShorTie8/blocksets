@@ -3,7 +3,8 @@
 
 CN,ipdeny,on,http://www.ipdeny.com/ipblocks/data/aggregated/cn-aggregated.zone
 RU,ipdeny,on,http://www.ipdeny.com/ipblocks/data/aggregated/ru-aggregated.zone
-simple_tracking,hosts,on,https://s3.amazonaws.com/lists.disconnect.me/simple_tracking.txt
+
+#simple_tracking,hosts,on,https://s3.amazonaws.com/lists.disconnect.me/simple_tracking.txt
 
 #justdomains,hosts,on,https://mirror1.malwaredomains.com/files/justdomains
 #simple_tracking,hosts,on,https://s3.amazonaws.com/lists.disconnect.me/simple_tracking.txt
