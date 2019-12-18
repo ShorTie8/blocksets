@@ -1,0 +1,26 @@
+#! /bin/sh
+#
+# Simple script to start blocksets.
+
+# load our functions {echolog} & colors
+. /etc/rc.d/inc.rc-functions
+# read in our variables
+. /var/smoothwall/mods/blocksets/settings
+
+
+echo -e "${STEP}  Checking for blocksets ${NO}"
+echolog "" "s" "" "Checking for blocksets "
+
+#if [ -f /var/smoothwall/mods/blocksets/settings -a "$ENABLED" == "on" ]; then
+#if [ "$ENABLED" == "on" ]; then
+	echo -e "${STEP}    Starting blocksets ${NO}"
+	echolog "" "s" "" "  Starting blocksets "
+	/usr/sbin/blockset restart
+
+	echo -e "${BOUL}    Sleepy 4${NO}"
+	sleep 4
+
+#else
+#	echo -e "${STEP}  blocksets not enabled ${NO}"
+#	echolog "" "s" "" "blocksets not enabled "
+#fi

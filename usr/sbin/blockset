@@ -1,0 +1,92 @@
+#!/bin/sh
+########################################################################
+# Begin SmoothWall blockset client, rc_base=/etc/rc.d
+#
+# Description : blockset client initscript
+# Licensed under the GNU GPL license that governs the Smoothwall Express source code.
+#
+########################################################################
+
+# load our functions {echolog} & colors
+. /etc/rc.d/inc.rc-functions
+# read in our variables
+#. /var/smoothwall/mod/blocksets/settings
+
+case "${1}" in
+	start)
+	  echo -e "${STEP}  ..Prepare blocksets ${NO}"
+	  echolog "" "s" "" "..Prepare blocksets "
+	  /usr/sbin/ipset -N blockSetNet nethash
+	  /usr/sbin/ipset -N blockSetHost iphash
+	  /usr/sbin/ipset -N whiteSetNet nethash
+	  /usr/sbin/ipset -N whiteSetHost iphash
+	  /usr/sbin/iptables -t mangle -N blockSetDrop
+	  # There is no logging as yet.
+	  /usr/sbin/iptables -t mangle -I blockSetDrop -m set --match-set whiteSetNet src,dst -j RETURN
+	  /usr/sbin/iptables -t mangle -I blockSetDrop -m set --match-set whiteSetHost src,dst -j RETURN
+	  /usr/sbin/iptables -t mangle -A blockSetDrop -j LOG --log-prefix "Denied-by-mangle:blockSetDrop"
+	  /usr/sbin/iptables -t mangle -A blockSetDrop -j DROP
+
+	  # Put them in mangle:PREROUTING to drop them before--and like--INVALID
+	  #   packets: ASAP
+	  /usr/sbin/iptables -t mangle -I PREROUTING -m set --match-set blockSetNet src,dst -j blockSetDrop
+	  /usr/sbin/iptables -t mangle -I PREROUTING -m set --match-set blockSetHost src,dst -j blockSetDrop
+
+	  # Fetch the list(s) and dump them into the sets.
+	  echo -e "${STEP}    Fetch the list(s) and dump them into the sets. ${NO}"
+	  echolog "" "s" "" "Fetch the list(s) and dump them into the sets. "
+	  /usr/bin/perl /var/smoothwall/mods/blocksets/etc/cron.daily/blocksets.pl
+
+        
+      sleep 22
+	  ;;
+
+	stop)
+	  echo -e "${STEP}      Stoping blocksets ${NO}"
+	  echolog "" "s" "" "    Stoping blocksets "
+	  # These are the ipset and iptables commands that destroy the sets
+
+	  # Delete the ipset match and the jump rules.
+	  echo -e "${STEP}        Delete the ipset match and the jump rules. ${NO}"
+	  echolog "" "s" "" "    Delete the ipset match and the jump rules. "
+	  iptables -t mangle -D PREROUTING -m set --match-set blockSetHost src,dst -j blockSetDrop
+	  iptables -t mangle -D PREROUTING -m set --match-set blockSetNet src,dst -j blockSetDrop
+
+	  # Flush and delete the drop chain
+	  echo -e "${STEP}        Flush and delete the drop chain ${NO}"
+	  echolog "" "s" "" "    Flush and delete the drop chain "
+	  iptables -t mangle -F blockSetDrop
+	  iptables -t mangle -X blockSetDrop
+
+	  # Flush and delete the ipsets
+	  echo -e "${STEP}        Flush and delete the ipsets ${NO}"
+	  echolog "" "s" "" "    Flush and delete the ipsets "
+	  ipset -F blockSetNet
+	  ipset -X blockSetNet
+	  ipset -F blockSetHost
+	  ipset -X blockSetHost
+	  ipset -F whiteSetNet
+	  ipset -X whiteSetNet
+	  ipset -F whiteSetHost
+	  ipset -X whiteSetHost
+	  ;;
+
+	restart)
+	  ${0} stop
+	  sleep 2
+	  ${0} start
+	  ;;
+
+	status)
+	  echo -en "${STEP}  blockset status  ${NO}"
+	  echolog "" "s" "" " blockset status  "
+	  ipset list
+	  ;;
+
+	*)
+	  echo "Usage: ${0} {start|stop|restart|status}"
+	  exit 1
+	  ;;
+esac
+
+# End blockset client

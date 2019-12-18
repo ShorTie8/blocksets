@@ -1,0 +1,15 @@
+#! /bin/sh
+#
+# Simple script to stop blocksets.
+
+# load our functions {echolog} & colors
+. /etc/rc.d/inc.rc-functions
+
+echo -e "${STEP}  Stopping blocksets ${NO}"
+echolog "" "s" "" "Stopping blocksets "
+
+/usr/sbin/blockset stop
+
+echo -e "${BOUL}    Sleepy 4${NO}"
+sleep 4
+
