@@ -377,7 +377,7 @@ sub parse_domains() {
     next if ($_ =~ /^#/);
     next if ($_ eq "");
     next if ($_ =~ /^localhost/);
-    print "line2 is  $_\n";
+#    print "line2 is  $_\n";
     my($first, $rest) = split(/\ /, $_, 2);
     print IPSET "add blockSetHostReplace $first $rest\n";
     #print IPSET "add blockSetHostReplace $_\n";
@@ -387,7 +387,7 @@ sub parse_domains() {
 #    elsif ($_ =~ /^[0-9]+\.[0-9]+\.[0-9]+\.[0-9]+$/ && $SEEN{$_} != 1) {
 #      print IPSET "add blockSetHostReplace $_\n";
 #    }
-    print "adding  blockSetHostReplace   $first $rest\n";
+#    print "adding  blockSetHostReplace   $first $rest\n";
     $SEEN{$_} = 1;
   }
   close(LIST);
