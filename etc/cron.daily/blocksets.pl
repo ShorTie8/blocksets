@@ -112,25 +112,25 @@ foreach $setType ("Net","Host")
   system ("/usr/sbin/ipset -X whiteSet${setType}Replace");
 }
 
-print "chomp netBlockEntries\n";
+print "chomp blockSetNet\n";
 open SET, "ipset list blockSetNet | egrep '^[0-9]' | wc -l |";
 $netBlockEntries = <SET>;
 chomp $netBlockEntries;
 close SET;
 
-print "chomp hostBlockEntries\n";
+print "chomp blockSetHost\n";
 open SET, "ipset list blockSetHost | egrep '^[0-9]' | wc -l |";
 $hostBlockEntries = <SET>;
 chomp $hostBlockEntries;
 close SET;
 
-print "chomp netWhiteEntries\n";
+print "chomp whiteSetNet\n";
 open SET, "ipset list whiteSetNet | egrep '^[0-9]' | wc -l |";
 $netWhiteEntries = <SET>;
 chomp $netWhiteEntries;
 close SET;
 
-print "chomp hostWhiteEntries\n";
+print "chomp whiteSetHost\n";
 open SET, "ipset list whiteSetHost | egrep '^[0-9]' | wc -l |";
 $hostWhiteEntries = <SET>;
 chomp $hostWhiteEntries;
