@@ -37,7 +37,7 @@ case "${1}" in
 	  echolog "" "s" "" "Fetch the list(s) and dump them into the sets. "
 	  /usr/bin/perl /var/smoothwall/mods/blocksets/etc/cron.daily/blocksets.pl
 
-        
+      echo -e "${STEP}  Sleepy 22 ${NO}"
       sleep 22
 	  ;;
 

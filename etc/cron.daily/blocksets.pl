@@ -376,6 +376,7 @@ sub parse_domains() {
     # Skip comments
     next if ($_ =~ /^#/);
     next if ($_ eq "");
+    next if ($_ =~ /^localhost/);
     print "line2 is  $_\n";
     my($first, $rest) = split(/\ /, $_, 2);
     print IPSET "add blockSetHostReplace $first $rest\n";
