@@ -35,6 +35,7 @@ if (! -f $settingsFile)
 }
 
 # Create the replacement sets
+print "Create the replacement sets\n";
   # blockSet Net
   # In case a previous run orphaned it
   system ("/usr/sbin/ipset -F blockSetNetReplace 2>/dev/null");
@@ -65,13 +66,16 @@ if (! -f $settingsFile)
 
 
 # Prepare ipset to 'restore'
+print "Prepare ipset to 'restore'\n";
 open (IPSET, "|/usr/sbin/ipset restore");
 
 # Do the local whitelist first to skip processing such entries when found.
+print "Do the local whitelist first\n";
 $parsers{"white"}->();
 
 # Fetch each block list, erase the HTML, comments and blank lines,
 #   and add to the respective replacement set.
+print "open SETTINGS\n";
 open SETTINGS, "<$settingsFile";
 while (<SETTINGS>)
 {
@@ -89,12 +93,14 @@ close(SETTINGS);
 close(IPSET);
 
 # For debugging
+print "For debugging\n";
 system ("/usr/sbin/ipset save blockSetNetReplace -file /var/smoothwall/mods/blocksets/blockSetNetReplace");
 system ("/usr/sbin/ipset save blockSetHostReplace -file /var/smoothwall/mods/blocksets/blockSetHostReplace");
 system ("/usr/sbin/ipset save whiteSetNetReplace -file /var/smoothwall/mods/blocksets/whiteSetNetReplace");
 system ("/usr/sbin/ipset save whiteSetHostReplace -file /var/smoothwall/mods/blocksets/whiteSetHostReplace");
 
 # Exchange the set's names and delete the 'now old' set
+print "Exchange the set's names and delete the 'now old' set\n";
 
 foreach $setType ("Net","Host")
 {
@@ -106,18 +112,25 @@ foreach $setType ("Net","Host")
   system ("/usr/sbin/ipset -X whiteSet${setType}Replace");
 }
 
+print "chomp netBlockEntries\n";
 open SET, "ipset list blockSetNet | egrep '^[0-9]' | wc -l |";
 $netBlockEntries = <SET>;
 chomp $netBlockEntries;
 close SET;
+
+print "chomp hostBlockEntries\n";
 open SET, "ipset list blockSetHost | egrep '^[0-9]' | wc -l |";
 $hostBlockEntries = <SET>;
 chomp $hostBlockEntries;
 close SET;
+
+print "chomp netWhiteEntries\n";
 open SET, "ipset list whiteSetNet | egrep '^[0-9]' | wc -l |";
 $netWhiteEntries = <SET>;
 chomp $netWhiteEntries;
 close SET;
+
+print "chomp hostWhiteEntries\n";
 open SET, "ipset list whiteSetHost | egrep '^[0-9]' | wc -l |";
 $hostWhiteEntries = <SET>;
 chomp $hostWhiteEntries;
