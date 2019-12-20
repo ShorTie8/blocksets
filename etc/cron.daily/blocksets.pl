@@ -9,10 +9,13 @@ use Data::Dumper;
 my (@BLOCKLIST, @BLOCKFUNC);
 my %SEEN;
 
-# my parsers sample lines
-# ipdeny	1.2.4.0/22
-# hosts		bugsense.com
-# domains	127.0.0.1	 000dom.revenuedirect.com
+# my parsers	sample lines
+#  ipdeny        1.2.4.0/22
+# Goes into blockSetNetReplace as, add blockSetNetReplace 1.2.4.0/22
+
+#  hosts         bugsense.com
+
+#  domains       127.0.0.1    000dom.revenuedirect.com
 
 my %parsers = (
 		'white' => \&parse_white,
