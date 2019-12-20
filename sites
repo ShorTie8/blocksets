@@ -1,15 +1,28 @@
 # SmoothWall blocksets sites file format
 # Description,Parser,ENABLE,Site
 
-CN,ipdeny,on,http://www.ipdeny.com/ipblocks/data/aggregated/cn-aggregated.zone
-RU,ipdeny,on,http://www.ipdeny.com/ipblocks/data/aggregated/ru-aggregated.zone
+# my parsers sample lines
+# ipdeny	1.2.4.0/22
+# hosts		bugsense.com
+# domains	127.0.0.1	 000dom.revenuedirect.com
 
+# ipdeny
+#CN,ipdeny,on,http://www.ipdeny.com/ipblocks/data/aggregated/cn-aggregated.zone
+#RU,ipdeny,on,http://www.ipdeny.com/ipblocks/data/aggregated/ru-aggregated.zone
+
+
+# hosts
+# text file, line like bugsense.com
 #simple_tracking,hosts,on,https://s3.amazonaws.com/lists.disconnect.me/simple_tracking.txt
+
+# domains
+# text file, line like  127.0.0.1	 000dom.revenuedirect.com
+cameleon,domains,on,http://sysctl.org/cameleon/hosts
 
 #justdomains,hosts,on,https://mirror1.malwaredomains.com/files/justdomains
 #simple_tracking,hosts,on,https://s3.amazonaws.com/lists.disconnect.me/simple_tracking.txt
 #simple_ad,hosts,on,https://s3.amazonaws.com/lists.disconnect.me/simple_ad.txt
 
 #StevenBlack,hosts,on,https://raw.githubusercontent.com/StevenBlack/hosts/master/hosts
-#cameleon,hosts,on,http://sysctl.org/cameleon/hosts
+
 #ad_servers,hosts,on,https://hosts-file.net/ad_servers.txt

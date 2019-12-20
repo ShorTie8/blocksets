@@ -9,12 +9,17 @@ use Data::Dumper;
 my (@BLOCKLIST, @BLOCKFUNC);
 my %SEEN;
 
-# dispatch table so we cannot execute random user-supplied functions
+# my parsers sample lines
+# ipdeny	1.2.4.0/22
+# hosts		bugsense.com
+# domains	127.0.0.1	 000dom.revenuedirect.com
+
 my %parsers = (
 		'white' => \&parse_white,
 		'local' => \&parse_local,
 		'ipdeny' => \&parse_ipdeny,
 		'hosts' => \&parse_hosts,
+		'domains' => \&parse_domains,
 	      );
 
 # Open syslog
@@ -254,8 +259,7 @@ sub parse_white() {
 }
 
 
-
-# Parse ipdeny blocklists
+# Parse hosts blocklists
 #
 # Fetch the block list, skip the HTML, comments and blank lines,
 #   and add to the respective replacement set.
@@ -306,6 +310,70 @@ sub parse_hosts() {
 #      print IPSET "add blockSetHostReplace $_\n";
 #    }
     print "adding  blockSetHostReplace  $_\n";
+    $SEEN{$_} = 1;
+  }
+  close(LIST);
+}
+
+
+# Parse domains blocklists
+#
+# Fetch the block list, skip the HTML, comments and blank lines,
+#   and add to the respective replacement set.
+
+sub parse_domains() {
+  print "line is  $_\n";
+  sleep(4);
+  my ($NAME,$ENABLE,$URL) = @_;
+
+  my $error = 0;
+  # No name?
+  if ($NAME eq "")
+  {
+    syslog("info", "parse_domains: no NAME");
+    $error = 1;
+  }
+  # No URL?
+  if ($URL eq "")
+  {
+    syslog("info", "parse_domains: no URL");
+    $error = 1;
+  }
+  # Can't proceed?
+  if ($error == 1) { return; }
+
+  # Enabled ??
+  if ($ENABLE ne "on") { 
+    print "      $NAME is Not Enabled\n";
+    return;
+  }
+
+  # Log the operation
+  syslog("info", "process $NAME");
+
+  my $populating = 0;
+
+  # Get and process each list
+  open (LIST, "wget -O - '${URL}' 2>/dev/null |");
+  #print "LIST   $LIST\n";
+  #sleep(14);
+  while (<LIST>)
+  {
+    chomp;
+    # Skip comments
+    next if ($_ =~ /^#/);
+    next if ($_ eq "");
+    print "line2 is  $_\n";
+    my($first, $rest) = split(/\ /, $_, 2);
+    print IPSET "add blockSetHostReplace $first $rest\n";
+    #print IPSET "add blockSetHostReplace $_\n";
+#    if ($_ =~ /^[a-zA-Z0-9\,\(\)@$!\%\^\&\*=\+_ ]*$/ && $SEEN{$_} != 1) {
+#      print IPSET "add blockSetHostReplace $_\n";
+#    }
+#    elsif ($_ =~ /^[0-9]+\.[0-9]+\.[0-9]+\.[0-9]+$/ && $SEEN{$_} != 1) {
+#      print IPSET "add blockSetHostReplace $_\n";
+#    }
+    print "adding  blockSetHostReplace   $first $rest\n";
     $SEEN{$_} = 1;
   }
   close(LIST);

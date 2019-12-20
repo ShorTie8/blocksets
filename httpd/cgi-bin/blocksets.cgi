@@ -53,7 +53,7 @@ if ($ENV{'QUERY_STRING'} && $cgiparams{'ACTION'} eq "" ) {
 
 if ($cgiparams{'ACTION'} eq $tr{'add'}) {
 	$errormessage .= $tr{'invalid discrip'} ."<br />\n" unless($cgiparams{'DESCRIP'} =~ /^([a-zA-Z 0-9]*)$/);
-	$errormessage .= $tr{'invalid parser'} ."<br />" unless ($cgiparams{'PARSER'} =~ /^(white|local|ipdeny|hosts)$/);
+	$errormessage .= $tr{'invalid parser'} ."<br />" unless ($cgiparams{'PARSER'} =~ /^(white|local|ipdeny|hosts|domains)$/);
 	$errormessage .= $tr{'invalid comment'} ."<br />\n" unless ( &validcomment( $cgiparams{'SITE'} ) );
 
 	unless ($errormessage) {
