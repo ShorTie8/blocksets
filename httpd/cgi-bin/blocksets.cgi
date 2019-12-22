@@ -180,7 +180,7 @@ END
 
 my %render_settings =
 (
-	'url'     => "/cgi-bin/blocksets.cgi?[%COL%],[%ORD%]",
+	'url'     => "/mods/blocksets/cgi-bin/blocksets.cgi?[%COL%],[%ORD%]",
 	'columns' => 
 	[
 		{ 
